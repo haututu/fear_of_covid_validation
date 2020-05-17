@@ -3,7 +3,10 @@ library(lavaan)
 library(haven)
 library(brms)
 
-covid_dat <- readxl::read_xlsx("data/L4SurveyCoded.xlsx") %>%
+covid_dat <- bind_rows(
+  read_sav("data/L3Clean.sav"),
+  read_sav("data/L4Clean.sav")
+  ) %>%
   select(ResponseId, Gender, Age, starts_with("FofCOVID")) %>%
   mutate(Gender = case_when(
     Gender == 1 ~ "male", 
