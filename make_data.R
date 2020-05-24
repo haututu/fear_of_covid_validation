@@ -46,6 +46,10 @@ covid_lvl3 <- read_sav("data/L3Clean.sav") %>%
 
 # Demographic information
 
+# Total number of participants for each level
+read_sav("data/L3Clean.sav") %>% summarise(n())
+read_sav("data/L4Clean.sav") %>% select(FearCovid = FearofCovid) %>% mutate(lockdown = "lvl4") %>% na.omit() %>% summarise(n())
+
 covid_dat %>%
   group_by(lockdown) %>%
   summarise(female_percent = mean(Gender == "female"),
@@ -55,7 +59,8 @@ covid_dat %>%
             european_percent = mean(Ethnicity == "european"),
             maori_poly_percent = mean(Ethnicity == "maori_poly"),
             asian_percent = mean(Ethnicity == "asian"),
-            other_percent = mean(Ethnicity == "other")
+            other_percent = mean(Ethnicity == "other"),
+            size = n()
             ) %>%
   gather(key, value, -1) %>%
   spread(lockdown, value) %>%
@@ -131,8 +136,8 @@ cor.test(predict(covid_pvd_lvl4)[,2], predict(covid_fear_lvl4))
 # MWB to fear
 cor.test(predict(covid_mwb), predict(covid_fear_for_mwb))
 
-cor.test(filter(covid_dat, lockdown == "lvl4")$Political_Beliefs, predict(covid_fear_lvl4))
-cor.test(filter(covid_dat, lockdown == "lvl3")$Political_Beliefs, predict(covid_fear_lvl3))
+cor.test(filter(covid_dat, lockdown == "lvl4")$Political_Beliefs, predict(covid_fear_lvl4), method = "spearman")
+cor.test(filter(covid_dat, lockdown == "lvl3")$Political_Beliefs, predict(covid_fear_lvl3), method = "spearman")
 
 # Cronback alpha
 covid_dat %>% filter(lockdown == "lvl3") %>% select(covid_cols) %>% na.omit() %>% ltm::cronbach.alpha(standardized = TRUE)

@@ -51,6 +51,11 @@ covid_lvl3 %>%
   group_by(lockdown) %>%
   summarise(m = mean(WEMWBS),
             sd = sd(WEMWBS))
+
+covid_dat %>%
+  group_by(lockdown) %>%
+  summarise(m = mean(Political_Beliefs),
+            sd = sd(Political_Beliefs))
 #####################################
 
 ############## Getting stats on FCOV
@@ -82,18 +87,12 @@ sjPlot::tab_itemscale(covid_dat %>%
                          na.omit(),
                       show.kurtosis = TRUE)
 
-sjPlot::sjt.itemanalysis(covid_dat %>%
-                           filter(lockdown == "lvl3") %>%
-                           mutate(id = row_number()) %>%
-                           select(contains("FofC")) %>%
-                           na.omit(),
-                         show.kurtosis = TRUE)
-
-performance::item_intercor(covid_dat %>%
-                             filter(lockdown == "lvl3") %>%
-                             mutate(id = row_number()) %>%
-                             select(contains("FofC")) %>%
-                             na.omit())
+sjPlot::tab_itemscale(covid_dat %>%
+                        filter(lockdown == "lvl4") %>%
+                        mutate(id = row_number()) %>%
+                        select(contains("FofC")) %>%
+                        na.omit(),
+                      show.kurtosis = TRUE)
 
 
 ########################## CORRELATIONS
